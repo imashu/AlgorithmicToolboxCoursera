@@ -1,34 +1,58 @@
 #include <iostream>
+typedef unsigned long long ll;
+//
+//ll get_fibonacci_huge_naive(ll n, ll m) {
+//    if (n <= 1)
+//        return n;
+//
+//    ll previous = 0;
+//    ll current  = 1;
+//
+//    for (ll i = 0; i < n - 1; ++i) {
+//        ll tmp_previous = previous;
+//        previous = current;
+//        current = tmp_previous + current;
+//    }
+//
+//    return current % m;
+//}
 
-
-long long get_fibonacci_huge_naive(long long n, long long m) {
-    if (n <= 1)
-        return n;
-
-    long long previous = 0;
-    long long current  = 1;
-
-    for (long long i = 0; i < n - 1; ++i) {
-        long long tmp_previous = previous;
-        previous = current;
-        current = tmp_previous + current;
+//https://www.youtube.com/watch?v=Nu-lW-Ifyec     new concept  - Pisano Period
+ll pisanoperiod(ll m)
+{
+    ll a=0;
+    ll b=1;
+    ll c=(a+b);
+    for(ll i=0;i<m*m;i++)
+    {
+        c=(a+b)%m;
+        a=b;
+        b=c;
+        if(a==0 && b==1)
+            return i+1;
     }
-
-    return current % m;
 }
-
-long long get_fibonacci_huge_fast(long long n, long long m) {
+ll get_fibonacci_huge_fast(ll n,ll m) {
     // write your code here
-    long long f[n];
-    f[0]=0;
-    f[1]=1;
-    for(long long i=2;i<=n;i++)
-        f[i]=(f[i-1]+f[i-2])%m;
-    return f[n];
+    ll rem=n%pisanoperiod(m);
+    ll f=0,s=1;
+    ll res=rem;
+    for(int i=1;i<rem;i++)
+    {
+        res=(f+s)%m;
+        f=s;
+        s=res;
+    }
+    return res%m;
+
 }
+
+
 
 int main() {
-    long long n, m;
+    ll n, m;
     std::cin >> n >> m;
-    std::cout << get_fibonacci_huge_naive(n, m) << '\n';
+
+     std::cout <<get_fibonacci_huge_fast(n, m)<<"\n" ;
+
 }
